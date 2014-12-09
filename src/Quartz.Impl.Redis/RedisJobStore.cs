@@ -13,6 +13,8 @@ namespace Quartz.Impl.Redis
 		private PooledRedisClientManager redisClientManager;
 		private ISchedulerSignaler signaler;
 		private String instanceIdFilePath;
+		private string instanceId;
+		private string instanceName;
 
 		public RedisJobStore()
 		{
@@ -296,27 +298,42 @@ namespace Quartz.Impl.Redis
 
 		public long EstimatedTimeToReleaseAndAcquireTrigger
 		{
-			get { throw new NotImplementedException(); }
+			get { return 200; }
 		}
 
 		public bool Clustered
 		{
-			get { throw new NotImplementedException(); }
+			get { return true; }
 		}
 
-		public string InstanceId
+		/// <summary>
+		/// Inform the <see cref="IJobStore" /> of the Scheduler instance's Id, 
+		/// prior to initialize being invoked.
+		/// </summary>
+		public virtual string InstanceId
 		{
-			set { throw new NotImplementedException(); }
+			set { this.instanceId = value; }
 		}
 
-		public string InstanceName
+		/// <summary>
+		/// Inform the <see cref="IJobStore" /> of the Scheduler instance's name, 
+		/// prior to initialize being invoked.
+		/// </summary>
+		public virtual string InstanceName
 		{
-			set { throw new NotImplementedException(); }
+			set { this.instanceName = value; }
 		}
 
 		public int ThreadPoolSize
 		{
-			set { throw new NotImplementedException(); }
+			set { 
+				// nothing to do 
+			}
+		}
+
+		private string CreateJobHashKey(string groupName, string jobName)
+		{
+			return string.Format("job:{0}:{1}", groupName, jobName);
 		}
 	}
 }
